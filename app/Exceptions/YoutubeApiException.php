@@ -30,4 +30,9 @@ class YoutubeApiException extends Exception
     {
         return new self("YouTube rate limit exceeded for video {$videoId}. Please try again later or use a proxy.", 429, null, $videoId, true);
     }
+
+    public static function timeoutExceeded(string $videoId): self
+    {
+        return new self("YouTube transcript fetch timed out for video {$videoId}. Please try again later.", 504, null, $videoId, false);
+    }
 }

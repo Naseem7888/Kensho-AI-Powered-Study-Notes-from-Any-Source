@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login • Plasma Background</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <div class="login-wrapper">
+    <form class="login-card" autocomplete="off">
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Sign in to continue</p>
+      <label>
+        <span>Email</span>
+        <input type="email" required placeholder="you@example.com" />
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" required placeholder="••••••••" />
+      </label>
+      <button type="submit">Login</button>
+      <div class="actions">
+        <a href="#register">Create account</a>
+        <a href="#forgot">Forgot password?</a>
+      </div>
+    </form>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

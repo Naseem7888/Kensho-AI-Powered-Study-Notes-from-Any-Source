@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+use App\Models\StudyNote;
+use App\Policies\StudyNotePolicy;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Foundation\Application;
 use GuzzleHttp\Client as HttpClient;
@@ -29,11 +32,19 @@ class AppServiceProvider extends ServiceProvider
 
         // YoutubeTranscriptService as scoped with HTTP and PSR-17 factories
         $this->app->scoped(\App\Services\YoutubeTranscriptService::class, function (Application $app) {
-            $httpClient = new HttpClient(['timeout' => 30, 'verify' => true]);
+            // Increase timeout for YouTube transcript fetches (some videos/transcripts can be slow)
+            $httpClient = new HttpClient([
+                'timeout' => 120,
+                'connect_timeout' => 10,
+                'verify' => true,
+            ]);
             $requestFactory = new RequestFactory();
             $streamFactory = new StreamFactory();
             return new \App\Services\YoutubeTranscriptService($httpClient, $requestFactory, $streamFactory);
         });
+
+        // ExportService as scoped (no external constructor deps)
+        $this->app->scoped(\App\Services\ExportService::class);
     }
 
     /**
@@ -41,6 +52,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(StudyNote::class, StudyNotePolicy::class);
     }
 }

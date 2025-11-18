@@ -4,13 +4,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-// Make the application (not the Laravel welcome page) the landing route.
-// Guests are sent to login; authenticated users go to the dashboard.
-Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
-});
+// Public landing page for all visitors
+Route::view('/', 'welcome')->name('welcome');
 
 Volt::route('dashboard', 'pages.dashboard')
     ->middleware(['auth', 'verified'])

@@ -18,7 +18,9 @@
             try {
                 const stored = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const enableDark = stored === 'dark' || (stored === null && prefersDark);
+                // Force dark for specific routes (dashboard & profile)
+                const forceDark = {{ (request()->routeIs('dashboard') || request()->routeIs('profile')) ? 'true' : 'false' }};
+                const enableDark = forceDark || stored === 'dark' || (stored === null && prefersDark);
                 const root = document.documentElement;
                 if (enableDark) root.classList.add('dark'); else root.classList.remove('dark');
             } catch (e) { }
@@ -64,6 +66,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body class="font-sans antialiased">
@@ -85,6 +88,7 @@
             {{ $slot }}
         </main>
     </div>
+    @livewireScripts
 </body>
 
 </html>

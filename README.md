@@ -26,6 +26,22 @@ npm run dev
 ```
 Visit `http://localhost:8000`.
 
+## Exports (PDF/Markdown)
+
+- PDF export uses `barryvdh/laravel-dompdf`. Install/update dependencies:
+
+  ```powershell
+  Push-Location "g:\Class Work\php\Kensho"; composer update barryvdh/laravel-dompdf
+  ```
+
+- From the Study Note details modal, use "Export PDF" or "Export Markdown".
+- Optional env overrides in `.env`:
+  - `DOMPDF_DEFAULT_PAPER` (default `a4`)
+  - `DOMPDF_DEFAULT_ORIENTATION` (default `portrait`)
+  - `DOMPDF_REMOTE_ENABLED` (default `true`)
+  - `DOMPDF_DPI` (default `96`)
+- DomPDF caches fonts under `storage/fonts/` (already gitignored).
+
 ## Dark Mode
 - Tailwind: `darkMode: 'selector'` in `tailwind.config.js`.
 - A tiny script in `resources/views/layouts/app.blade.php` and `guest.blade.php` sets `document.documentElement.classList` based on `localStorage.theme` or system preference to avoid FOUC.

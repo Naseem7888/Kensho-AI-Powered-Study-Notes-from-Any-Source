@@ -62,27 +62,30 @@
     </script>
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/auth.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body class="font-sans text-gray-900 antialiased">
-    <div
-        class="relative min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950">
+    <!-- Fullscreen auth canvas background (blobs + ripples) -->
+    <canvas id="auth-bg-canvas" class="auth-plasma-canvas" aria-hidden="true" data-use-shader="false"></canvas>
+    <div class="relative min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-transparent">
         <!-- Subtle shimmer overlay for depth (optional) -->
         <div
-            class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent animate-pulse">
+            class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/2 to-transparent animate-pulse">
         </div>
-        <div>
+        <div class="relative z-10">
             <a href="/" wire:navigate>
                 <x-application-logo class="w-20 h-20 fill-current text-white/90 dark:text-white/70 drop-shadow" />
             </a>
         </div>
 
         <div
-            class="relative w-full sm:max-w-md mt-6 px-6 py-4 bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl overflow-hidden sm:rounded-lg">
+            class="auth-card relative z-10 w-full sm:max-w-md mt-6 px-6 py-4 bg-white/8 dark:bg-white/3 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-2xl overflow-hidden sm:rounded-lg">
             {{ $slot }}
         </div>
     </div>
+    @livewireScripts
 </body>
 
 </html>

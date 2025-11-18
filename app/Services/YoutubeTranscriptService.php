@@ -75,8 +75,13 @@ class YoutubeTranscriptService
         } catch (NoTranscriptFoundException $e) {
             throw new YoutubeTranscriptNotFoundException($videoId, $preferredLanguages);
         } catch (\Throwable $e) {
-            Log::error('YouTube transcript fetch error', ['video' => $videoId, 'error' => $e->getMessage()]);
-            throw new YoutubeApiException('Failed to fetch YouTube transcript: ' . $e->getMessage(), (int) $e->getCode(), $e, $videoId);
+            // Distinguish timeouts/connect issues to give a clearer message
+            $msg = $e->getMessage();
+            Log::error('YouTube transcript fetch error', ['video' => $videoId, 'error' => $msg]);
+            if ($e instanceof \GuzzleHttp\Exception\ConnectException || stripos($msg, 'timed out') !== false || stripos($msg, 'cURL error 28') !== false) {
+                throw YoutubeApiException::timeoutExceeded($videoId);
+            }
+            throw new YoutubeApiException('Failed to fetch YouTube transcript: ' . $msg, (int) $e->getCode(), $e, $videoId);
         }
     }
 
