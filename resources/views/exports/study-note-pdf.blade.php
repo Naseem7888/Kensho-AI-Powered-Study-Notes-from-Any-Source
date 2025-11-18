@@ -5,25 +5,59 @@
     <meta charset="utf-8">
     <title>{{ $note->title ?? 'Study Note' }}</title>
     <style>
+        @php
+            $font = $font ?? null;
+            $layout = $layout ?? 'default';
+            if ($font) {
+                $serif = ['Times New Roman', 'Georgia', 'DejaVu Serif'];
+                $mono = ['Courier New', 'DejaVu Sans Mono'];
+                if (in_array($font, $serif)) {
+                    $fontCss = "'" . e($font) . "', serif";
+                } elseif (in_array($font, $mono)) {
+                    $fontCss = "'" . e($font) . "', monospace";
+                } else {
+                    $fontCss = "'" . e($font) . "', Arial, sans-serif";
+                }
+            } else {
+                $fontCss = 'DejaVu Sans, Arial, sans-serif';
+            }
+            $pageMargin = match ($layout) {
+                'compact' => '18px',
+                'classic' => '40px',
+                'two-column' => '24px',
+                default => '32px',
+            };
+        @endphp
+
         @page {
-            margin: 32px;
+            margin:
+                {{ $pageMargin }}
+            ;
         }
 
         body {
             font-family:
-                {{ isset($font) && $font ? "'" . e($font) . "'" : 'DejaVu Sans' }}
-                , Arial, sans-serif;
+                {{ $fontCss }}
+            ;
             color: #111827;
-            font-size: 12px;
+            font-size:
+                {{ $layout === 'compact' ? '11px' : '12px' }}
+            ;
+            line-height: 1.45;
+            -webkit-font-smoothing: antialiased;
         }
 
         h1 {
-            font-size: 22px;
+            font-size:
+                {{ $layout === 'compact' ? '20px' : '22px' }}
+            ;
             margin: 0 0 8px;
         }
 
         h2 {
-            font-size: 16px;
+            font-size:
+                {{ $layout === 'compact' ? '14px' : '16px' }}
+            ;
             margin: 18px 0 8px;
         }
 
@@ -60,6 +94,34 @@
             padding: 2px 6px;
             border-radius: 999px;
         }
+
+        @if(($layout ?? 'default') === 'two-column')
+            body {
+                column-count: 2;
+                column-gap: 28px;
+            }
+
+            .hr {
+                break-after: avoid-column;
+            }
+
+        @endif
+
+        @if(($layout ?? 'default') === 'classic')
+            h1, h2 {
+                font-family: serif;
+            }
+
+            body {
+                font-size: 13px;
+            }
+
+            .badge {
+                background: #f3f4f6;
+                color: #1f2937;
+            }
+
+        @endif
     </style>
 </head>
 

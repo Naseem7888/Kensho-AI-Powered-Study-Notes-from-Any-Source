@@ -28,6 +28,7 @@ new #[Layout('layouts.app')] class extends Component {
     public $notes; // collection
     public $viewingNote; // StudyNote|null
     public string $exportFont = 'DejaVu Sans';
+    public string $exportLayout = 'default';
     public string $exportError = '';
 
     // Edit-specific properties
@@ -281,7 +282,7 @@ new #[Layout('layouts.app')] class extends Component {
         $this->authorize('view', $note);
         try {
             $this->exportError = '';
-            return $export->pdfResponse($note, $this->exportFont);
+            return $export->pdfResponse($note, $this->exportFont, $this->exportLayout);
         } catch (ExportException $e) {
             $this->exportError = $e->getMessage();
             return null;
@@ -569,16 +570,42 @@ new #[Layout('layouts.app')] class extends Component {
                 </div>
                 <div class="flex flex-col sm:flex-row sm:justify-end sm:space-x-3 pt-4 space-y-2 sm:space-y-0">
                     <div class="flex space-x-2 mr-auto sm:mr-0">
-                        <div class="flex items-center space-x-2">
-                            <label class="text-sm text-gray-200">Font</label>
-                            <select wire:model="exportFont"
-                                class="rounded-md bg-white/10 border border-white/20 text-white p-1 text-sm">
-                                <option value="DejaVu Sans">DejaVu Sans</option>
-                                <option value="Arial">Arial</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Courier New">Courier New</option>
-                            </select>
+                        <div class="flex items-center space-x-3">
+                            <div x-data="{ open:false }" class="relative">
+                                <button type="button" @click="open = !open"
+                                    class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-white text-sm flex items-center space-x-2">
+                                    <span>Font</span>
+                                    <span class="ml-2 font-medium">{{ $exportFont }}</span>
+                                </button>
+                                <ul x-show="open" @click.outside="open = false" x-cloak
+                                    class="absolute z-50 mt-1 bg-gray-900 rounded-md shadow-lg max-h-48 overflow-auto w-56">
+                                    @foreach(['DejaVu Sans', 'DejaVu Serif', 'DejaVu Sans Mono', 'Arial', 'Times New Roman', 'Georgia', 'Courier New'] as $f)
+                                        <li>
+                                            <button type="button" @click="open=false"
+                                                wire:click.prevent="$set('exportFont','{{ $f }}')"
+                                                class="w-full text-left px-3 py-2 hover:bg-indigo-600/60 text-white text-sm">{{ $f }}</button>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+
+                            <div x-data="{ open:false }" class="relative">
+                                <button type="button" @click="open = !open"
+                                    class="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-white text-sm flex items-center space-x-2">
+                                    <span>Layout</span>
+                                    <span class="ml-2 font-medium">{{ ucfirst($exportLayout) }}</span>
+                                </button>
+                                <ul x-show="open" @click.outside="open = false" x-cloak
+                                    class="absolute z-50 mt-1 bg-gray-900 rounded-md shadow-lg max-h-40 overflow-auto w-48">
+                                    @foreach(['default', 'classic', 'compact', 'two-column'] as $layout)
+                                        <li>
+                                            <button type="button" @click="open=false"
+                                                wire:click.prevent="$set('exportLayout','{{ $layout }}')"
+                                                class="w-full text-left px-3 py-2 hover:bg-indigo-600/60 text-white text-sm">{{ ucfirst($layout) }}</button>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                         <button type="button" wire:click="exportPdf({{ $viewingNote->id }})" wire:loading.attr="disabled"
                             wire:target="exportPdf({{ $viewingNote->id }})"
