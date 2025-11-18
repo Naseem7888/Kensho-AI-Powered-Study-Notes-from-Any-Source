@@ -196,6 +196,10 @@ new #[Layout('layouts.app')] class extends Component {
         $this->editKeyConcepts = $note->key_concepts ?? [];
         $this->editStudyQuestions = $note->study_questions ?? [];
         $this->showCreateModal = true;
+        // Ensure the modal opens client-side (x-modal listens for this event)
+        $this->dispatch('open-modal', name: 'study-note-form');
+        // If editing was triggered from the details view, close that modal
+        $this->dispatch('close-modal', name: 'view-note-details');
     }
 
     public function updateStudyNote(): void
