@@ -1,3 +1,29 @@
+# Normalize line endings across platforms
+* text=auto
+
+# Force LF for text files commonly used in the project
+*.php text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+
+# Mark binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Ensure composer and node lockfiles are treated as text
+composer.lock text eol=lf
+package-lock.json text eol=lf
+yarn.lock text eol=lf
 * text=auto eol=lf
 
 *.blade.php diff=html
