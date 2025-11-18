@@ -9,12 +9,13 @@ use Illuminate\Support\Str;
 
 class ExportService
 {
-    public function pdfResponse(StudyNote $note)
+    public function pdfResponse(StudyNote $note, ?string $font = null)
     {
         try {
             $fileName = $this->fileName($note, 'pdf');
             $pdf = Pdf::loadView('exports.study-note-pdf', [
                 'note' => $note,
+                'font' => $font,
             ]);
 
             return response()->streamDownload(function () use ($pdf) {

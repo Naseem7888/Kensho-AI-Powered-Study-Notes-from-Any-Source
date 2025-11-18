@@ -27,6 +27,7 @@ new #[Layout('layouts.app')] class extends Component {
     public string $processingMessage = '';
     public $notes; // collection
     public $viewingNote; // StudyNote|null
+    public string $exportFont = 'DejaVu Sans';
     public string $exportError = '';
 
     // Edit-specific properties
@@ -280,7 +281,7 @@ new #[Layout('layouts.app')] class extends Component {
         $this->authorize('view', $note);
         try {
             $this->exportError = '';
-            return $export->pdfResponse($note);
+            return $export->pdfResponse($note, $this->exportFont);
         } catch (ExportException $e) {
             $this->exportError = $e->getMessage();
             return null;
@@ -568,6 +569,17 @@ new #[Layout('layouts.app')] class extends Component {
                 </div>
                 <div class="flex flex-col sm:flex-row sm:justify-end sm:space-x-3 pt-4 space-y-2 sm:space-y-0">
                     <div class="flex space-x-2 mr-auto sm:mr-0">
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm text-gray-200">Font</label>
+                            <select wire:model="exportFont"
+                                class="rounded-md bg-white/10 border border-white/20 text-white p-1 text-sm">
+                                <option value="DejaVu Sans">DejaVu Sans</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Courier New">Courier New</option>
+                            </select>
+                        </div>
                         <button type="button" wire:click="exportPdf({{ $viewingNote->id }})" wire:loading.attr="disabled"
                             wire:target="exportPdf({{ $viewingNote->id }})"
                             class="px-3 py-1 rounded-md bg-indigo-600/70 hover:bg-indigo-600 text-white text-sm">

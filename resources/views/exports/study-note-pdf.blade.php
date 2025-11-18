@@ -10,7 +10,9 @@
         }
 
         body {
-            font-family: DejaVu Sans, Arial, sans-serif;
+            font-family:
+                {{ isset($font) && $font ? "'" . e($font) . "'" : 'DejaVu Sans' }}
+                , Arial, sans-serif;
             color: #111827;
             font-size: 12px;
         }
@@ -66,7 +68,8 @@
     <div class="badge">Source: {{ ucfirst((string) $note->source_type) }}</div>
     @if(!empty($note->difficulty_level))
         <div class="badge" style="background: #10b981; color: #0b3b2e; margin-left: 6px;">Difficulty:
-            {{ ucfirst($note->difficulty_level) }}</div>
+            {{ ucfirst($note->difficulty_level) }}
+        </div>
     @endif
     @if(!is_null($note->estimated_study_time))
         <span style="font-size: 10px; color: #6366f1; margin-left: 6px;">Study Time:
